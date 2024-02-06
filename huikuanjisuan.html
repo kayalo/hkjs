@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>银行汇款手续费计算器</title>
+    <style>
+        /* CSS样式可以跟之前提供的保持一致 */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>银行汇款手续费计算器</h2>
+        <label for="amount">汇款金额：</label>
+        <input type="number" id="amount" min="0" step="0.01"><br><br>
+        <button onclick="calculateFees()">计算所有银行的手续费</button><br><br>
+        <div id="fees"></div>
+    </div>
+
+    <script>
+        function calculateFees() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('请输入有效的金额！');
+                return;
+            }
+
+            const banks = [
+                { name: '邮政储蓄', feeRate: 0.0008, minFee: 20, maxFee: 200, telegramFee: 70 },
+                { name: '中国银行', feeRate: 0.001 * 0.9, minFee: 50, maxFee: 260, telegramFee: 150 * 0.9 },
+                { name: '招商银行', feeRate: 0.001, minFee: 50, maxFee: 280, telegramFee: 100 },
+                { name: '工商银行', feeRate: 0.001 * 0.8, minFee: 20, maxFee: 200, telegramFee: 100 }
+            ];
+
+            let feesHTML = '<h3>各银行的总费用（参考）：</h3>';
+            feesHTML += '<ul>';
+            banks.forEach(bank => {
+                const fee = Math.max(bank.minFee, Math.min(bank.maxFee, amount * bank.feeRate));
+                const totalFee = fee + bank.telegramFee;
+                feesHTML += `<li>${bank.name}：${totalFee.toFixed(2)} 元</li>`;
+            });
+            feesHTML += '</ul>';
+
+            document.getElementById('fees').innerHTML = feesHTML;
+        }
+    </script>
+</body>
+</html>
